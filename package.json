@@ -7,9 +7,13 @@
     "dev": "cross-env NODE_ENV=development nodemon app.ts"
   },
   "dependencies": {
+    "@types/http-errors": "^1.8.2",
+    "@types/uuid": "^8.3.4",
     "cors": "^2.8.5",
     "express": "^4.18.1",
     "express-winston": "^4.2.0",
+    "http-errors": "^2.0.0",
+    "uuid": "^8.3.2",
     "winston": "^3.7.2"
   },
   "devDependencies": {
