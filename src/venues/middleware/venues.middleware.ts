@@ -15,6 +15,14 @@ class VenuesMiddleware {
       next(createHttpError(400, "Missing required fields"))
     }
   }
+
+  async validateExistSlug(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) {
+
+  }
 }
 
 export default new VenuesMiddleware()

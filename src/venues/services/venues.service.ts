@@ -1,11 +1,11 @@
 import { CRUD } from "../../common/interfaces/crud.interface"
 import VenuesDao from "../daos/venues.dao"
-import { SearchVenueDto } from "../entities/search.venue.dto"
+import { SearchVenueQueryDto } from "../entities/search.venue.dto"
 import { VenueModel } from "../entities/venue"
 
 class VenuesService implements CRUD {
-  async search(searchVenue?: SearchVenueDto): Promise<VenueModel[]> {
-    return []
+  async search(searchQuery: SearchVenueQueryDto): Promise<VenueModel[]> {
+    return VenuesDao.searchVenue(searchQuery)
   }
 
   create(data: any): Promise<string> {

@@ -4,7 +4,7 @@ import VenuesService from "../services/venues.service"
 class VenuesController {
   async searchVenues(req: express.Request, res: express.Response, next: express.NextFunction) {
     try {
-      const venues = VenuesService.search(req.body)
+      const venues = await VenuesService.search(req.body)
       res.status(200).send(venues)
     } catch (e) {
       next(e)
@@ -16,6 +16,7 @@ class VenuesController {
       const newVenueId = await VenuesService.create(req.body)
       res.status(200).send({ id: newVenueId })
     } catch (e) {
+      console.log(e)
       next(e)
     }
   }
