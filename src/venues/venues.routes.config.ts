@@ -11,6 +11,7 @@ export default class VenuesRoutes extends CommonRoutesConfig {
   configureRoutes(): express.Application {
     this.app.route("/venue/search").post(VenuesController.searchVenues)
     this.app.route("/venue").post(VenuesMiddleware.validateCreateVenueBodyFields, VenuesController.createVenue)
+    this.app.route("/venue/:venueId").delete(VenuesMiddleware.extractTenantId, VenuesController.deleteVenueById)
     return this.app
   }
 }

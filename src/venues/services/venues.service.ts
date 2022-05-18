@@ -12,8 +12,8 @@ class VenuesService implements CRUD {
     return VenuesDao.createVenue(data)
   }
 
-  deleteById(id: string): Promise<any> {
-    return Promise.resolve(undefined)
+  deleteById(id: string): Promise<void> {
+    return VenuesDao.deleteVenueById(id)
   }
 
   putById(id: string, data: any): Promise<any> {

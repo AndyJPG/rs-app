@@ -16,7 +16,15 @@ class VenuesController {
       const newVenueId = await VenuesService.create(req.body)
       res.status(200).send({ id: newVenueId })
     } catch (e) {
-      console.log(e)
+      next(e)
+    }
+  }
+
+  async deleteVenueById(req: express.Request, res: express.Response, next: express.NextFunction) {
+    try {
+      await VenuesService.deleteById(req.body.id)
+      res.status(204).send()
+    } catch (e) {
       next(e)
     }
   }

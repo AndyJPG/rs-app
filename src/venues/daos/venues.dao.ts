@@ -24,6 +24,21 @@ class VenuesDao {
 
   Venue = MongooseService.getMongoose().model<VenueSchemaModel>("Venues", this.venueSchema)
 
+  async searchVenue(searchQuery: SearchVenueQueryDto): Promise<VenueModel[]> {
+    const { venueSlug } = searchQuery
+    const query: { [key: string]: any } = {}
+
+    if (venueSlug) {
+      query.slug = venueSlug
+    }
+
+    const venuesData = await this.Venue.find(query).exec()
+    return venuesData.map(venue => {
+      const { _id, ...values } = venue.toJSON()
+      return values
+    })
+  }
+
   async createVenue(venue: CreateVenueDto): Promise<string> {
     const newVenue: VenueModel = {
       id: uuidv4(),
@@ -40,19 +55,8 @@ class VenuesDao {
     return newVenue.id
   }
 
-  async searchVenue(searchQuery: SearchVenueQueryDto): Promise<VenueModel[]> {
-    const { venueSlug } = searchQuery
-    const query: { [key: string]: any } = {}
-
-    if (venueSlug) {
-      query.slug = venueSlug
-    }
-
-    const venuesData = await this.Venue.find(query).exec()
-    return venuesData.map(venue => {
-      const { _id, ...values } = venue.toJSON()
-      return values
-    })
+  async deleteVenueById(venueId: string): Promise<void> {
+    await this.Venue.deleteOne({ id: venueId }).exec()
   }
 }
 
