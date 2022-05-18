@@ -2,9 +2,9 @@ export interface VenueModel {
   id: string
   name: string
   slug: string
-  banner: string
-  isClosed: string
-  location: string
-  logo: string
-  phone: string
+  banner: string | null
+  isClosed: boolean
+  location: string | null
+  logo: string | null
+  phone: string | null
 }

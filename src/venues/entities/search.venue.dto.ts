@@ -1,3 +1,3 @@
-export interface SearchVenueDto {
-  venueSlug: string
+export interface SearchVenueQueryDto {
+  venueSlug?: string
 }

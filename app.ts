@@ -1,6 +1,7 @@
 import cors from "cors"
 import express from "express"
 import * as http from "http"
+import createHttpError from "http-errors"
 import VenuesRoutes from "./src/venues/venues.routes.config"
 
 const app: express.Application = express()
@@ -19,7 +20,11 @@ new VenuesRoutes(api)
 // app mounted path
 app.use("/venue-api", api)
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  res.status(500).send(err)
+  if (err.status) {
+    res.status(err.status).send(err)
+  } else {
+    res.status(500).send(createHttpError(500))
+  }
 })
 
 // Simple testing routes
