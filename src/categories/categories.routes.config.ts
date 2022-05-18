@@ -8,7 +8,9 @@ export default class CategoriesRoutes extends CommonRoutesConfig {
   }
 
   configureRoutes(): express.Application {
-    this.app.route("/category").get(CategoriesController.searchCategories)
+    this.app.route("/category")
+      .get(CategoriesController.searchCategories)
+      .post(CategoriesController.createCategory)
     return this.app
   }
 }

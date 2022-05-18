@@ -6,5 +6,5 @@ export interface VenueModel {
   isClosed: boolean
   location: string | null
   logo: string | null
-  phone: string | null
+  phone: string | string[] | null
 }
