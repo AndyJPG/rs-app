@@ -2,6 +2,7 @@ import cors from "cors"
 import express from "express"
 import * as http from "http"
 import createHttpError from "http-errors"
+import CategoriesRoutes from "./src/categories/categories.routes.config"
 import VenuesRoutes from "./src/venues/venues.routes.config"
 
 const app: express.Application = express()
@@ -16,6 +17,7 @@ app.use(express.json())
 app.use(cors())
 
 new VenuesRoutes(api)
+new CategoriesRoutes(api)
 
 // app mounted path
 app.use("/venue-api", api)
