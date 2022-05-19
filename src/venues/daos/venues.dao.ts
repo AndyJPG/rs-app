@@ -1,11 +1,14 @@
 import { v4 as uuidv4 } from "uuid"
+import { CategoryModel } from "../../categories/entities/category"
 import MongooseService from "../../common/services/mongoose.service"
 import { CreateVenueDto } from "../entities/create.venue.dto"
+import { PutVenueDto } from "../entities/put.venue.dto"
 import { SearchVenueQueryDto } from "../entities/search.venue.dto"
 import { VenueModel } from "../entities/venue"
 
 interface VenueSchemaModel extends VenueModel {
-  _id: string
+  _id: string,
+  categories: [ { type: string, ref: string } ]
 }
 
 class VenuesDao {
@@ -19,7 +22,8 @@ class VenuesDao {
     isClosed: Boolean,
     location: String,
     logo: String,
-    phone: String
+    phone: String,
+    categories: [ { type: String, ref: "Categories" } ]
   }, { id: false, versionKey: false })
 
   Venue = MongooseService.getMongoose().model<VenueSchemaModel>("Venues", this.venueSchema)
@@ -55,8 +59,36 @@ class VenuesDao {
     return newVenue.id
   }
 
+  async updateVenue(venueId: string, venue: PutVenueDto): Promise<VenueModel | null> {
+    const updateFields = [ "name", "slug", "banner", "location", "logo", "phone", "categories" ]
+    for (const key in venue) {
+      if (!updateFields.includes(key)) {
+        delete venue[key]
+      }
+    }
+
+    const updatedVenue = await this.Venue.findOneAndUpdate({ id: venueId }, { $set: venue }, { new: true })
+
+    if (updatedVenue) {
+      const { _id, ...newVenue } = updatedVenue.toJSON()
+      return newVenue
+    }
+
+    return null
+  }
+
   async deleteVenueById(venueId: string): Promise<void> {
     await this.Venue.deleteOne({ id: venueId }).exec()
+  }
+
+  async getVenueCategories(venueId: string): Promise<CategoryModel[]> {
+    try {
+      const categories = await this.Venue.findOne({ id: venueId }).populate("categories")
+      console.log(categories)
+    } catch (e) {
+      console.log(e)
+    }
+    return []
   }
 }
 

@@ -24,6 +24,14 @@ class CategoriesDao {
   Category = MongooseService.getMongoose()
     .model<CategorySchemaModel>("Categories", this.categorySchema)
 
+  async search(): Promise<CategoryModel[]> {
+    const categories = await this.Category.find().exec()
+    return categories.map(category => {
+      const { _id, ...value } = category.toJSON()
+      return value
+    })
+  }
+
   async createCategory(data: CreateCategoryDto) {
     const newCategory: CategoryModel = {
       id: uuidv4(),

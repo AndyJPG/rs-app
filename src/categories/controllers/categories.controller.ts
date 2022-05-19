@@ -3,7 +3,12 @@ import CategoriesService from "../services/categories.service"
 
 class CategoriesController {
   async searchCategories(req: express.Request, res: express.Response, next: express.NextFunction) {
-    res.status(200).send("test categories route")
+    try {
+      const categories = await CategoriesService.search()
+      res.status(200).send(categories)
+    } catch (e) {
+      next(e)
+    }
   }
 
   async createCategory(req: express.Request, res: express.Response, next: express.NextFunction) {
