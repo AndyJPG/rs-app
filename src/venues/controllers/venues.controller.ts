@@ -48,9 +48,8 @@ class VenuesController {
 
   async getVenueCategories(req: express.Request, res: express.Response, next: express.NextFunction) {
     try {
-      await VenuesService.getVenueCategories(req.body.id)
-      res.status(200)
-        .send()
+      const categories = await VenuesService.getVenueCategories(req.body.id)
+      res.status(200).send(categories)
     } catch (e) {
       next(e)
     }

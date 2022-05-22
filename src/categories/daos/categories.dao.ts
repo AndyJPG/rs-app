@@ -1,9 +1,8 @@
-import { v4 as uuidv4 } from "uuid"
 import MongooseService from "../../common/services/mongoose.service"
 import { CategoryModel } from "../entities/category"
 import { CreateCategoryDto } from "../entities/create.category.dto"
 
-interface CategorySchemaModel extends CategoryModel {
+interface CategorySchemaModel extends Omit<CategoryModel, "id"> {
   _id: string
 }
 
@@ -11,7 +10,6 @@ class CategoriesDao {
   Schema = MongooseService.getMongoose().Schema
 
   categorySchema = new this.Schema<CategorySchemaModel>({
-    id: { type: String, unique: true, required: true },
     name: { type: String, required: true },
     slug: { type: String, unique: true, required: true },
     venueId: String,
@@ -28,13 +26,12 @@ class CategoriesDao {
     const categories = await this.Category.find().exec()
     return categories.map(category => {
       const { _id, ...value } = category.toJSON()
-      return value
+      return { id: _id, ...value }
     })
   }
 
-  async createCategory(data: CreateCategoryDto) {
-    const newCategory: CategoryModel = {
-      id: uuidv4(),
+  async createCategory(data: CreateCategoryDto): Promise<string> {
+    const newCategory: Omit<CategoryModel, "id"> = {
       name: data.name,
       slug: data.slug,
       venueId: data.venueId || null,
@@ -44,8 +41,8 @@ class CategoriesDao {
       img: data.img || null
     }
     const mongoCategory = new this.Category(newCategory)
-    await mongoCategory.save()
-    return newCategory.id
+    const savedCategory = await mongoCategory.save()
+    return savedCategory._id
   }
 }
 
