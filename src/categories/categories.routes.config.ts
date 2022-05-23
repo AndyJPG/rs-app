@@ -1,6 +1,7 @@
 import express from "express"
 import { CommonRoutesConfig } from "../common/common.routes.config"
 import CategoriesController from "./controllers/categories.controller"
+import CategoriesMiddleware from "./middleware/categories.middleware"
 
 export default class CategoriesRoutes extends CommonRoutesConfig {
   constructor(app: express.Application) {
@@ -9,8 +10,14 @@ export default class CategoriesRoutes extends CommonRoutesConfig {
 
   configureRoutes(): express.Application {
     this.app.route("/category")
-      .get(CategoriesController.searchCategories)
       .post(CategoriesController.createCategory)
+
+    this.app.route("/category/search")
+      .post(CategoriesController.searchCategories)
+
+    this.app.route("/category/:categoryId")
+      .delete(CategoriesMiddleware.extractCategoryId, CategoriesController.deleteCategoryById)
+
     return this.app
   }
 }

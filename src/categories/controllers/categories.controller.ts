@@ -19,6 +19,15 @@ class CategoriesController {
       next(e)
     }
   }
+
+  async deleteCategoryById(req: express.Request, res: express.Response, next: express.NextFunction) {
+    try {
+      await CategoriesService.deleteById(req.body.id)
+      res.status(204).send()
+    } catch (e) {
+      next(e)
+    }
+  }
 }
 
 export default new CategoriesController()

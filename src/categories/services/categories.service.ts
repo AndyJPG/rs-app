@@ -12,8 +12,8 @@ class CategoriesService implements CRUD {
     return CategoriesDao.createCategory(data)
   }
 
-  deleteById(id: string): Promise<any> {
-    return Promise.resolve(undefined)
+  deleteById(id: string): Promise<void> {
+    return CategoriesDao.deleteCategoryById(id)
   }
 
   putById(id: string, data: any): Promise<any> {

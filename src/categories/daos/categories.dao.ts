@@ -11,7 +11,7 @@ class CategoriesDao {
 
   categorySchema = new this.Schema<CategorySchemaModel>({
     name: { type: String, required: true },
-    slug: { type: String, unique: true, required: true },
+    slug: { type: String, required: true },
     venueId: String,
     parentCategoryId: String,
     isClosed: Boolean,
@@ -43,6 +43,10 @@ class CategoriesDao {
     const mongoCategory = new this.Category(newCategory)
     const savedCategory = await mongoCategory.save()
     return savedCategory._id
+  }
+
+  async deleteCategoryById(id: string): Promise<void> {
+    await this.Category.deleteOne({ _id: id }).exec()
   }
 }
 
