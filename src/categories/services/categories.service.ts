@@ -2,6 +2,7 @@ import { CRUD } from "../../common/interfaces/crud.interface"
 import CategoriesDao from "../daos/categories.dao"
 import { CategoryModel } from "../entities/category"
 import { CreateCategoryDto } from "../entities/create.category.dto"
+import { PutCategoryDto } from "../entities/put.category.dto"
 
 class CategoriesService implements CRUD {
   search(): Promise<CategoryModel[]> {
@@ -16,8 +17,8 @@ class CategoriesService implements CRUD {
     return CategoriesDao.deleteCategoryById(id)
   }
 
-  putById(id: string, data: any): Promise<any> {
-    return Promise.resolve(undefined)
+  putById(id: string, data: PutCategoryDto): Promise<any> {
+    return CategoriesDao.updateCategoryById(id, data)
   }
 
   readById(id: string): Promise<any> {

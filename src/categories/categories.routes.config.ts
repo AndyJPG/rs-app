@@ -16,7 +16,9 @@ export default class CategoriesRoutes extends CommonRoutesConfig {
       .post(CategoriesController.searchCategories)
 
     this.app.route("/category/:categoryId")
-      .delete(CategoriesMiddleware.extractCategoryId, CategoriesController.deleteCategoryById)
+      .all(CategoriesMiddleware.extractCategoryId)
+      .put(CategoriesController.updateCategory)
+      .delete(CategoriesController.deleteCategoryById)
 
     return this.app
   }

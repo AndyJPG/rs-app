@@ -1,9 +1,12 @@
+import { Types } from "mongoose"
 import MongooseService from "../../common/services/mongoose.service"
 import { CategoryModel } from "../entities/category"
 import { CreateCategoryDto } from "../entities/create.category.dto"
+import { PutCategoryDto } from "../entities/put.category.dto"
 
 interface CategorySchemaModel extends Omit<CategoryModel, "id"> {
   _id: string
+  menuSections: string[]
 }
 
 class CategoriesDao {
@@ -16,7 +19,8 @@ class CategoriesDao {
     parentCategoryId: String,
     isClosed: Boolean,
     orderingType: [ String ],
-    img: String
+    img: String,
+    menuSections: [ { type: Types.ObjectId, ref: "Categories" } ]
   }, { id: false, versionKey: false })
 
   Category = MongooseService.getMongoose()
@@ -43,6 +47,17 @@ class CategoriesDao {
     const mongoCategory = new this.Category(newCategory)
     const savedCategory = await mongoCategory.save()
     return savedCategory._id
+  }
+
+  async updateCategoryById(id: string, data: PutCategoryDto): Promise<CategoryModel | null> {
+    const updatedCategory = await this.Category.findOneAndUpdate({ _id: id }, { $set: data }, { new: true })
+
+    if (updatedCategory) {
+      const { _id, ...newCategory } = updatedCategory.toJSON()
+      return { id: _id, ...newCategory }
+    }
+
+    return null
   }
 
   async deleteCategoryById(id: string): Promise<void> {

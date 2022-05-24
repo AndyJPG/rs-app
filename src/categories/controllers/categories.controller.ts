@@ -20,6 +20,15 @@ class CategoriesController {
     }
   }
 
+  async updateCategory(req: express.Request, res: express.Response, next: express.NextFunction) {
+    try {
+      const newUpdatedCategory = await CategoriesService.putById(req.body.id, req.body)
+      res.status(200).send(newUpdatedCategory)
+    } catch (e) {
+      next(e)
+    }
+  }
+
   async deleteCategoryById(req: express.Request, res: express.Response, next: express.NextFunction) {
     try {
       await CategoriesService.deleteById(req.body.id)
