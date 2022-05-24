@@ -1,8 +1,9 @@
 import { Types } from "mongoose"
 import MongooseService from "../../common/services/mongoose.service"
-import { CategoryModel } from "../entities/category"
+import { CategoryModel, CategoryWithMenuSectionsModel } from "../entities/category"
 import { CreateCategoryDto } from "../entities/create.category.dto"
 import { PutCategoryDto } from "../entities/put.category.dto"
+import { SearchCategoryQueryDto } from "../entities/search.category.dto"
 
 interface CategorySchemaModel extends Omit<CategoryModel, "id"> {
   _id: string
@@ -26,12 +27,34 @@ class CategoriesDao {
   Category = MongooseService.getMongoose()
     .model<CategorySchemaModel>("Categories", this.categorySchema)
 
-  async search(): Promise<CategoryModel[]> {
-    const categories = await this.Category.find().exec()
+  async search(searchQuery: SearchCategoryQueryDto): Promise<CategoryModel[]> {
+    const categories = await this.Category.find(searchQuery).exec()
     return categories.map(category => {
-      const { _id, ...value } = category.toJSON()
+      const { _id, menuSections, ...value } = category.toJSON()
       return { id: _id, ...value }
     })
+  }
+
+  async getCategoryById(id: string): Promise<CategoryWithMenuSectionsModel | null> {
+    const categoryData = await this.Category.findOne({ _id: id })
+      .populate<{ menuSections: (Omit<CategoryModel, "id"> & { _id: string })[] }>("menuSections")
+
+    if (categoryData) {
+      const { _id, ...values } = categoryData.toJSON()
+      const sections = categoryData.menuSections.map(menu => ({
+        id: menu._id,
+        venueId: menu.venueId,
+        parentCategoryId: menu.parentCategoryId,
+        name: menu.name,
+        slug: menu.slug,
+        isClosed: menu.isClosed,
+        orderingType: menu.orderingType,
+        img: menu.img
+      }))
+      return { id: _id, ...values, menuSections: sections }
+    }
+
+    return null
   }
 
   async createCategory(data: CreateCategoryDto): Promise<string> {

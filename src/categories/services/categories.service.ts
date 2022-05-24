@@ -1,12 +1,13 @@
 import { CRUD } from "../../common/interfaces/crud.interface"
 import CategoriesDao from "../daos/categories.dao"
-import { CategoryModel } from "../entities/category"
+import { CategoryModel, CategoryWithMenuSectionsModel } from "../entities/category"
 import { CreateCategoryDto } from "../entities/create.category.dto"
 import { PutCategoryDto } from "../entities/put.category.dto"
+import { SearchCategoryQueryDto } from "../entities/search.category.dto"
 
 class CategoriesService implements CRUD {
-  search(): Promise<CategoryModel[]> {
-    return CategoriesDao.search()
+  search(searchCategoryQuery: SearchCategoryQueryDto): Promise<CategoryModel[]> {
+    return CategoriesDao.search(searchCategoryQuery)
   }
 
   create(data: CreateCategoryDto): Promise<string> {
@@ -21,8 +22,8 @@ class CategoriesService implements CRUD {
     return CategoriesDao.updateCategoryById(id, data)
   }
 
-  readById(id: string): Promise<any> {
-    return Promise.resolve(undefined)
+  readById(id: string): Promise<CategoryWithMenuSectionsModel | null> {
+    return CategoriesDao.getCategoryById(id)
   }
 
 }

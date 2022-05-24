@@ -4,8 +4,17 @@ import CategoriesService from "../services/categories.service"
 class CategoriesController {
   async searchCategories(req: express.Request, res: express.Response, next: express.NextFunction) {
     try {
-      const categories = await CategoriesService.search()
+      const categories = await CategoriesService.search(req.body)
       res.status(200).send(categories)
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async getCategoryById(req: express.Request, res: express.Response, next: express.NextFunction) {
+    try {
+      const categoryWithMenuSections = await CategoriesService.readById(req.body.id)
+      res.status(200).send(categoryWithMenuSections)
     } catch (e) {
       next(e)
     }

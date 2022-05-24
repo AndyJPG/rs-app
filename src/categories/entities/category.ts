@@ -8,3 +8,7 @@ export interface CategoryModel {
   orderingType: string[] | null
   img: string | null
 }
+
+export interface CategoryWithMenuSectionsModel extends CategoryModel {
+  menuSections: CategoryModel[]
+}
