@@ -3,6 +3,7 @@ import express from "express"
 import * as http from "http"
 import createHttpError from "http-errors"
 import CategoriesRoutes from "./src/categories/categories.routes.config"
+import ItemsRoutes from "./src/items/items.routes.config"
 import VenuesRoutes from "./src/venues/venues.routes.config"
 
 const app: express.Application = express()
@@ -18,6 +19,7 @@ app.use(cors())
 
 new VenuesRoutes(api)
 new CategoriesRoutes(api)
+new ItemsRoutes(api)
 
 // app mounted path
 app.use("/venue-api", api)
