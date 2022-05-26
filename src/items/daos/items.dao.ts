@@ -22,7 +22,7 @@ class ItemsDao {
       displayPrice: String,
       priceInCent: { type: Number, required: true }
     }
-  }, { id: false })
+  }, { id: false, versionKey: false })
 
   Item = MongooseService.getMongoose().model<ItemSchemaModel>("Items", this.itemSchema)
 

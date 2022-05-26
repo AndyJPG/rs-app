@@ -6,7 +6,7 @@ class ItemsController {
     try {
       const { categories, ...value } = req.body
       const newItemId = await ItemsService.create(value, categories)
-      res.status(201).send(newItemId)
+      res.status(201).send({ id: newItemId })
     } catch (e) {
       next(e)
     }

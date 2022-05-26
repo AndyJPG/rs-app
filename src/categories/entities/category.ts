@@ -1,3 +1,5 @@
+import { ItemModel } from "../../items/entities/item"
+
 export interface CategoryModel {
   id: string
   venueId: string | null
@@ -10,5 +12,9 @@ export interface CategoryModel {
 }
 
 export interface CategoryWithMenuSectionsModel extends CategoryModel {
-  menuSections: CategoryModel[]
+  menuSections: CategoryWithMenuItemsModel[]
+}
+
+export interface CategoryWithMenuItemsModel extends CategoryModel {
+  menuItems: ItemModel[]
 }

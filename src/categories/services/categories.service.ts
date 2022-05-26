@@ -18,6 +18,10 @@ class CategoriesService implements CRUD {
     return CategoriesDao.deleteCategoryById(id)
   }
 
+  getCategoriesWithItemsById(id: string): Promise<CategoryWithMenuSectionsModel> {
+    return CategoriesDao.getCategoryWithItemsById(id)
+  }
+
   putById(id: string, data: PutCategoryDto): Promise<any> {
     return CategoriesDao.updateCategoryById(id, data)
   }
