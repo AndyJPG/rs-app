@@ -75,6 +75,10 @@ class VenuesDao {
     return null
   }
 
+  async addCategoryToVenueById(venueId: string, categories: string[]): Promise<void> {
+    await this.Venue.findOneAndUpdate({ _id: venueId }, { $push: { categories: [ ...categories ] } })
+  }
+
   async deleteVenueById(venueId: string): Promise<void> {
     await this.Venue.deleteOne({ _id: venueId }).exec()
   }

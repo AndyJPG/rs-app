@@ -110,7 +110,7 @@ class CategoriesDao {
     }
   }
 
-  async createCategory(data: CreateCategoryDto): Promise<string> {
+  async createCategory(data: CreateCategoryDto): Promise<CategoryModel> {
     const newCategory: Omit<CategoryModel, "id"> = {
       name: data.name,
       slug: data.slug,
@@ -122,7 +122,8 @@ class CategoriesDao {
     }
     const mongoCategory = new this.Category(newCategory)
     const savedCategory = await mongoCategory.save()
-    return savedCategory._id
+    const { _id, ...values } = savedCategory
+    return { id: _id, ...values }
   }
 
   async updateCategoryById(id: string, data: PutCategoryDto): Promise<CategoryModel | null> {
@@ -136,15 +137,8 @@ class CategoriesDao {
     return null
   }
 
-  async addItemToCategoryById(id: string, items: string[]): Promise<CategoryModel | null> {
-    const updateCategory = await this.Category.findOneAndUpdate({ _id: id }, { $push: { menuItems: [ ...items ] } })
-
-    if (updateCategory) {
-      const { _id, ...newCategory } = updateCategory.toJSON()
-      return { id: _id, ...newCategory }
-    }
-
-    return null
+  async addItemToCategoryById(id: string, items: string[]): Promise<void> {
+    await this.Category.findOneAndUpdate({ _id: id }, { $push: { menuItems: [ ...items ] } })
   }
 
   async deleteCategoryById(id: string): Promise<void> {
