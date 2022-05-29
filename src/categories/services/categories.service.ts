@@ -1,4 +1,5 @@
 import { CRUD } from "../../common/interfaces/crud.interface"
+import VenuesService from "../../venues/services/venues.service"
 import CategoriesDao from "../daos/categories.dao"
 import { CategoryModel, CategoryWithMenuSectionsModel } from "../entities/category"
 import { CreateCategoryDto } from "../entities/create.category.dto"
@@ -10,8 +11,12 @@ class CategoriesService implements CRUD {
     return CategoriesDao.search(searchCategoryQuery)
   }
 
-  create(data: CreateCategoryDto): Promise<string> {
-    return CategoriesDao.createCategory(data)
+  async create(data: CreateCategoryDto): Promise<CategoryModel> {
+    const newCategory = await CategoriesDao.createCategory(data)
+    if (data.venueId) {
+      await VenuesService.addCategoryToVenueById(data.venueId, [ newCategory.id ])
+    }
+    return newCategory
   }
 
   deleteById(id: string): Promise<void> {
@@ -26,7 +31,7 @@ class CategoriesService implements CRUD {
     return CategoriesDao.updateCategoryById(id, data)
   }
 
-  async addItemToCategoryById(id: string, items: string[]): Promise<CategoryModel | null> {
+  async addItemToCategoryById(id: string, items: string[]): Promise<void> {
     return CategoriesDao.addItemToCategoryById(id, items)
   }
 

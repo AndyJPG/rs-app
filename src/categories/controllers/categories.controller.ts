@@ -31,8 +31,8 @@ class CategoriesController {
 
   async createCategory(req: express.Request, res: express.Response, next: express.NextFunction) {
     try {
-      const newCategoryId = await CategoriesService.create(req.body)
-      res.status(201).send({ id: newCategoryId })
+      const newCategory = await CategoriesService.create(req.body)
+      res.status(201).send({ id: newCategory.id })
     } catch (e) {
       next(e)
     }

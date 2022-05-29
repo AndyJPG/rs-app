@@ -14,6 +14,10 @@ class VenuesService implements CRUD {
     return VenuesDao.createVenue(data)
   }
 
+  async addCategoryToVenueById(venueId: string, categories: string[]): Promise<void> {
+    return VenuesDao.addCategoryToVenueById(venueId, categories)
+  }
+
   deleteById(id: string): Promise<void> {
     return VenuesDao.deleteVenueById(id)
   }
