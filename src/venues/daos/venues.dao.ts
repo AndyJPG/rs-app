@@ -42,6 +42,36 @@ class VenuesDao {
     })
   }
 
+  async getVenueById(venueId: string): Promise<VenueModel | null> {
+    const venueData = await this.Venue.findOne({ _id: venueId }).exec()
+    if (venueData) {
+      const { _id, ...values } = venueData.toJSON()
+      return { id: _id, ...values }
+    }
+    return null
+  }
+
+  async getVenueCategories(venueId: string): Promise<CategoryModel[]> {
+    const venue = await this.Venue.findOne({ _id: venueId })
+      .populate<{ categories: (Omit<CategoryModel, "id"> & { _id: string })[] }>("categories")
+
+    if (venue) {
+      return venue.categories.map(category => {
+        return {
+          id: category._id,
+          venueId: category.venueId,
+          parentCategoryId: category.parentCategoryId,
+          name: category.name,
+          slug: category.slug,
+          isClosed: category.isClosed,
+          orderingType: category.orderingType,
+          img: category.img
+        }
+      })
+    }
+    return []
+  }
+
   async createVenue(venue: CreateVenueDto): Promise<string> {
     const newVenue: Omit<VenueModel, "id"> = {
       name: venue.name,
@@ -81,27 +111,6 @@ class VenuesDao {
 
   async deleteVenueById(venueId: string): Promise<void> {
     await this.Venue.deleteOne({ _id: venueId }).exec()
-  }
-
-  async getVenueCategories(venueId: string): Promise<CategoryModel[]> {
-    const venue = await this.Venue.findOne({ _id: venueId })
-      .populate<{ categories: (Omit<CategoryModel, "id"> & { _id: string })[] }>("categories")
-
-    if (venue) {
-      return venue.categories.map(category => {
-        return {
-          id: category._id,
-          venueId: category.venueId,
-          parentCategoryId: category.parentCategoryId,
-          name: category.name,
-          slug: category.slug,
-          isClosed: category.isClosed,
-          orderingType: category.orderingType,
-          img: category.img
-        }
-      })
-    }
-    return []
   }
 }
 

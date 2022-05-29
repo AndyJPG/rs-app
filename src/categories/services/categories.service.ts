@@ -45,7 +45,6 @@ class CategoriesService implements CRUD {
   readById(id: string): Promise<CategoryWithMenuSectionsModel | null> {
     return CategoriesDao.getCategoryById(id)
   }
-
 }
 
 export default new CategoriesService()
