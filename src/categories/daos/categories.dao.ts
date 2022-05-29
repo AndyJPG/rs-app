@@ -125,6 +125,10 @@ class CategoriesDao {
     return { id: _id, ...values }
   }
 
+  async addMenuSectionToCategoryById(id: string, categories: string[]): Promise<void> {
+    await this.Category.findOneAndUpdate({ _id: id }, { $push: { menuSections: [ ...categories ] } })
+  }
+
   async updateCategoryById(id: string, data: PutCategoryDto): Promise<CategoryModel | null> {
     const updatedCategory = await this.Category.findOneAndUpdate({ _id: id }, { $set: data }, { new: true })
 

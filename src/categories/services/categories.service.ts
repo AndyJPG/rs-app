@@ -16,6 +16,9 @@ class CategoriesService implements CRUD {
     if (data.venueId) {
       await VenuesService.addCategoryToVenueById(data.venueId, [ newCategory.id ])
     }
+    if (data.parentCategoryId) {
+      await this.addMenuSectionToCategoryById(data.parentCategoryId, [ newCategory.id ])
+    }
     return newCategory
   }
 
@@ -33,6 +36,10 @@ class CategoriesService implements CRUD {
 
   async addItemToCategoryById(id: string, items: string[]): Promise<void> {
     return CategoriesDao.addItemToCategoryById(id, items)
+  }
+
+  async addMenuSectionToCategoryById(id: string, categories: string[]): Promise<void> {
+    return CategoriesDao.addMenuSectionToCategoryById(id, categories)
   }
 
   readById(id: string): Promise<CategoryWithMenuSectionsModel | null> {
