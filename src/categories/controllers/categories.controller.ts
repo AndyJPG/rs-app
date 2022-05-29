@@ -20,6 +20,15 @@ class CategoriesController {
     }
   }
 
+  async getCategoriesWithItemsByID(req: express.Request, res: express.Response, next: express.NextFunction) {
+    try {
+      const categoriesWithItems = await CategoriesService.getCategoriesWithItemsById(req.body.id)
+      res.status(200).send(categoriesWithItems)
+    } catch (e) {
+      next(e)
+    }
+  }
+
   async createCategory(req: express.Request, res: express.Response, next: express.NextFunction) {
     try {
       const newCategoryId = await CategoriesService.create(req.body)
