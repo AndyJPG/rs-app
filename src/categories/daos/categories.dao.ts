@@ -1,6 +1,5 @@
-import { Model, Types, PopulateOptions } from "mongoose"
+import { Types } from "mongoose"
 import MongooseService from "../../common/services/mongoose.service"
-import ItemsDao from "../../items/daos/items.dao"
 import { ItemModel } from "../../items/entities/item"
 import { CategoryModel, CategoryWithMenuSectionsModel } from "../entities/category"
 import { CreateCategoryDto } from "../entities/create.category.dto"

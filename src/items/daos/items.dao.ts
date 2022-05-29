@@ -1,4 +1,3 @@
-import CategoriesService from "../../categories/services/categories.service"
 import MongooseService from "../../common/services/mongoose.service"
 import { ItemModel } from "../entities/item"
 import { ItemCreateDto } from "../entities/item.create.dto"
@@ -27,7 +26,7 @@ class ItemsDao {
 
   Item = MongooseService.getMongoose().model<ItemSchemaModel>("Items", this.itemSchema)
 
-  async createItem(data: ItemCreateDto, categories?: string[]): Promise<string> {
+  async createItem(data: ItemCreateDto): Promise<ItemModel> {
     const newItem: Omit<ItemModel, "id"> = {
       name: data.name,
       slug: data.slug,
@@ -44,15 +43,8 @@ class ItemsDao {
     }
     const mongoItem = new this.Item(newItem)
     const savedItem = await mongoItem.save()
-
-    if (categories) {
-      const categoryIds = [ ...new Set(categories) ]
-      for (const categoryId of categoryIds) {
-        await CategoriesService.addItemToCategoryById(categoryId, [ savedItem._id ])
-      }
-    }
-
-    return savedItem._id
+    const { _id, ...values } = savedItem
+    return { id: _id, ...values }
   }
 }
 
