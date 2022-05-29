@@ -10,19 +10,20 @@ export default class CategoriesRoutes extends CommonRoutesConfig {
 
   configureRoutes(): express.Application {
     this.app.route("/category")
+      .all(CategoriesMiddleware.validateCreateCategory)
       .post(CategoriesController.createCategory)
 
     this.app.route("/category/search")
       .post(CategoriesController.searchCategories)
 
     this.app.route("/category/:categoryId")
-      .all(CategoriesMiddleware.extractCategoryId)
+      .all(CategoriesMiddleware.extractCategoryId, CategoriesMiddleware.categoryExist)
       .get(CategoriesController.getCategoryById)
       .put(CategoriesController.updateCategory)
       .delete(CategoriesController.deleteCategoryById)
 
     this.app.route("/category/:categoryId/items")
-      .all(CategoriesMiddleware.extractCategoryId)
+      .all(CategoriesMiddleware.extractCategoryId, CategoriesMiddleware.categoryExist)
       .get(CategoriesController.getCategoriesWithItemsByID)
 
     return this.app

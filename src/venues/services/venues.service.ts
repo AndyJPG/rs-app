@@ -26,8 +26,8 @@ class VenuesService implements CRUD {
     return VenuesDao.updateVenue(id, data)
   }
 
-  readById(id: string): Promise<any> {
-    return Promise.resolve(undefined)
+  readById(id: string): Promise<VenueModel | null> {
+    return VenuesDao.getVenueById(id)
   }
 
   async getVenueCategories(id: string): Promise<CategoryModel[]> {

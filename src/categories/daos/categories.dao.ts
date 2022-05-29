@@ -1,6 +1,5 @@
-import { Model, Types, PopulateOptions } from "mongoose"
+import { Types } from "mongoose"
 import MongooseService from "../../common/services/mongoose.service"
-import ItemsDao from "../../items/daos/items.dao"
 import { ItemModel } from "../../items/entities/item"
 import { CategoryModel, CategoryWithMenuSectionsModel } from "../entities/category"
 import { CreateCategoryDto } from "../entities/create.category.dto"
@@ -124,6 +123,10 @@ class CategoriesDao {
     const savedCategory = await mongoCategory.save()
     const { _id, ...values } = savedCategory
     return { id: _id, ...values }
+  }
+
+  async addMenuSectionToCategoryById(id: string, categories: string[]): Promise<void> {
+    await this.Category.findOneAndUpdate({ _id: id }, { $push: { menuSections: [ ...categories ] } })
   }
 
   async updateCategoryById(id: string, data: PutCategoryDto): Promise<CategoryModel | null> {
