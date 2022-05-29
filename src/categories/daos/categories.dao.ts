@@ -34,7 +34,7 @@ class CategoriesDao {
   async search(searchQuery: SearchCategoryQueryDto): Promise<CategoryModel[]> {
     const categories = await this.Category.find(searchQuery).exec()
     return categories.map(category => {
-      const { _id, menuSections, ...value } = category.toJSON()
+      const { _id, menuSections, menuItems, ...value } = category.toJSON()
       return { id: _id, ...value }
     })
   }
@@ -44,7 +44,7 @@ class CategoriesDao {
       .populate<{ menuSections: (Omit<CategoryModel, "id"> & { _id: string })[] }>("menuSections")
 
     if (categoryData) {
-      const { _id, ...values } = categoryData.toJSON()
+      const { _id, menuItems, ...values } = categoryData.toJSON()
       const sections = categoryData.menuSections.map(menu => ({
         id: menu._id,
         venueId: menu.venueId,
@@ -71,7 +71,7 @@ class CategoriesDao {
 
 
     if (categoryData) {
-      const { _id, ...values } = categoryData.toJSON()
+      const { _id, menuItems, ...values } = categoryData.toJSON()
       const sections = categoryData.menuSections.map(menu => ({
         id: menu._id,
         venueId: menu.venueId,
@@ -130,6 +130,17 @@ class CategoriesDao {
 
     if (updatedCategory) {
       const { _id, ...newCategory } = updatedCategory.toJSON()
+      return { id: _id, ...newCategory }
+    }
+
+    return null
+  }
+
+  async addItemToCategoryById(id: string, items: string[]): Promise<CategoryModel | null> {
+    const updateCategory = await this.Category.findOneAndUpdate({ _id: id }, { $push: { menuItems: [ ...items ] } })
+
+    if (updateCategory) {
+      const { _id, ...newCategory } = updateCategory.toJSON()
       return { id: _id, ...newCategory }
     }
 
