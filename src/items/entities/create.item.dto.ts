@@ -1,4 +1,4 @@
-export interface ItemCreateDto {
+export interface CreateItemDto {
   name: string
   slug: string
   venueId: string

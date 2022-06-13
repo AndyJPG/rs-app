@@ -9,6 +9,8 @@ export default class ItemsRoutes extends CommonRoutesConfig {
 
   configureRoutes(): express.Application {
     this.app.route("/item").post(ItemsController.createItem)
+    this.app.route("/item/search").post(ItemsController.searchItem)
+    
     return this.app
   }
 }

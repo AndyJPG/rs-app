@@ -1,6 +1,7 @@
 import MongooseService from "../../common/services/mongoose.service"
 import { ItemModel } from "../entities/item"
-import { ItemCreateDto } from "../entities/item.create.dto"
+import { CreateItemDto } from "../entities/create.item.dto"
+import { SearchItemDto } from "../entities/search.item.dto"
 
 interface ItemSchemaModel extends Omit<ItemModel, "id"> {
   _id: string
@@ -26,7 +27,23 @@ class ItemsDao {
 
   Item = MongooseService.getMongoose().model<ItemSchemaModel>("Items", this.itemSchema)
 
-  async createItem(data: ItemCreateDto): Promise<ItemModel> {
+  async searchItem(searchQuery: SearchItemDto): Promise<ItemModel[]> {
+    const { itemSlug } = searchQuery
+    const query: { [key: string]: any } = {}
+
+    if (itemSlug) {
+      query.slug = itemSlug
+    }
+
+    const itemsData = await this.Item.find(query).exec()
+
+    return itemsData.map(item => {
+      const { _id, ...values } = item.toJSON()
+      return { id: _id, ...values }
+    })
+  }
+
+  async createItem(data: CreateItemDto): Promise<ItemModel> {
     const newItem: Omit<ItemModel, "id"> = {
       name: data.name,
       slug: data.slug,

@@ -2,10 +2,15 @@ import CategoriesService from "../../categories/services/categories.service"
 import { CRUD } from "../../common/interfaces/crud.interface"
 import ItemsDao from "../daos/items.dao"
 import { ItemModel } from "../entities/item"
-import { ItemCreateDto } from "../entities/item.create.dto"
+import { CreateItemDto } from "../entities/create.item.dto"
+import { SearchItemDto } from "../entities/search.item.dto"
 
 class ItemsService implements CRUD {
-  async create(data: ItemCreateDto, categories?: string[]): Promise<ItemModel> {
+  async search(searchQuery: SearchItemDto): Promise<ItemModel[]> {
+    return ItemsDao.searchItem(searchQuery)
+  }
+
+  async create(data: CreateItemDto, categories?: string[]): Promise<ItemModel> {
     const newItem = await ItemsDao.createItem(data)
 
     if (categories) {

@@ -27,6 +27,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   if (err.status) {
     res.status(err.status).send(err)
   } else {
+    console.log(err)
     res.status(500).send(createHttpError(500))
   }
 })
