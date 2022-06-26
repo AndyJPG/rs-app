@@ -20,6 +20,7 @@ class VenuesDao {
     banner: String,
     isClosed: Boolean,
     location: String,
+    locationLink: String,
     logo: String,
     phone: String,
     categories: [ { type: Types.ObjectId, ref: "Categories" } ]
@@ -79,6 +80,7 @@ class VenuesDao {
       banner: venue.banner || null,
       isClosed: false,
       location: venue.location || null,
+      locationLink: venue.locationLink || null,
       logo: venue.logo || null,
       phone: venue.phone || null
     }
@@ -88,7 +90,7 @@ class VenuesDao {
   }
 
   async updateVenue(venueId: string, venue: PutVenueDto): Promise<VenueModel | null> {
-    const updateFields = [ "name", "slug", "banner", "location", "logo", "phone", "categories" ]
+    const updateFields = [ "name", "slug", "banner", "location", "locationLink", "logo", "phone", "categories" ]
     for (const key in venue) {
       if (!updateFields.includes(key)) {
         delete venue[key]
@@ -97,6 +99,7 @@ class VenuesDao {
 
     const updatedVenue = await this.Venue.findOneAndUpdate({ id: venueId }, { $set: venue }, { new: true })
 
+    console.log(updatedVenue)
     if (updatedVenue) {
       const { _id, ...newVenue } = updatedVenue.toJSON()
       return { id: _id, ...newVenue }

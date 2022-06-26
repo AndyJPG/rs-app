@@ -5,6 +5,7 @@ export interface VenueModel {
   banner: string | null
   isClosed: boolean
   location: string | null
+  locationLink: string | null
   logo: string | null
   phone: string | string[] | null
 }
